@@ -1,15 +1,23 @@
 library(openxlsx)
 library(data.table)
 library(snow)
-Sys.setenv(R_ZIPCMD = "C:/Rtools/bin/zip.exe")
+
 opTimeCountsMile <- NULL
 motornummer<-NULL
 engType <- NULL
 engSeries <- NULL
+setwd(workDir)
+driveTypeBreaks <- c(0, 850, Inf)  #c(-1,1,300) km/h
+driveTypeBreaks1 <- c(0, 1e-2, 850, Inf)
+engSpeedTypeBreaks <- c(0, 1e-2, Inf) # U/min
+fuelConsTypeBreaks <- c(0, 1e-2, Inf)
+
 # opTimeCountsMile <- NULL
 failSlides <- data.frame(matrix(nrow=0,ncol=6))
 
 #Path ----
+
+Sys.setenv(R_ZIPCMD = "C:/Rtools/bin/zip.exe")
 ### preliminaries and path definitions
 .libPaths(c(.libPaths(),"C:/EngineDL/SETUP_Files/R-3.3.3/library2"))
 workDir <- "C:/EngineDL/WorkDir/Version_6_0_177-822/" # path of the R workspace (see row 13)
@@ -27,11 +35,7 @@ pdflatex <- 'C:/Program Files/MiKTeX 2.9/miktex/bin/x64/pdflatex.exe' # PDFLaTeX
 
 # ----
 
-setwd(workDir)
-driveTypeBreaks <- c(0, 850, Inf)  #c(-1,1,300) km/h
-driveTypeBreaks1 <- c(0, 1e-2, 850, Inf)
-engSpeedTypeBreaks <- c(0, 1e-2, Inf) # U/min
-fuelConsTypeBreaks <- c(0, 1e-2, Inf)
+
 ### function definitions
 readwithTrack<- function(fNames){
   #signalVec<-c("EngOilMplSnsr_S","EngOilMplSnsrPwm_PercLvl","EngOilLvl","EngOilLvl_V2","Odo","Time_abs")
